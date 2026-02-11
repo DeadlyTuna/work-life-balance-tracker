@@ -10,6 +10,7 @@ import Signup from "./pages/Signup";
 import Timetable from "./pages/Timetable";
 import Navbar from "./components/layouts/Navbar";
 import AICheckup from "./pages/AICheckup";
+import Analytics from "./pages/Analytics";
 import { LogProvider } from "./context/LogContext";
 import { AuthProvider, useAuth } from "./context/AuthContext";
 import { ThemeProvider } from "./context/ThemeContext";
@@ -37,6 +38,7 @@ function App() {
               <Route path="/signup" element={<Signup />} />
               <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
               <Route path="/habits" element={<PrivateRoute><Habits /></PrivateRoute>} />
+              <Route path="/analytics" element={<PrivateRoute><Analytics /></PrivateRoute>} />
               <Route path="/settings" element={<PrivateRoute><ProfileSettings /></PrivateRoute>} />
               <Route path="/tools" element={<PrivateRoute><Tools /></PrivateRoute>} />
               <Route path="/ai-checkup" element={<PrivateRoute><AICheckup /></PrivateRoute>} />

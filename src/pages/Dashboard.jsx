@@ -78,16 +78,16 @@ const Dashboard = () => {
     }
 
     const getMoodEmoji = (mood) => {
-        if (mood >= 8) return '😊';
-        if (mood >= 6) return '😌';
-        if (mood >= 4) return '😐';
+        if (mood >= 80) return '😊';
+        if (mood >= 60) return '😌';
+        if (mood >= 40) return '😐';
         return '😔';
     };
 
     const getMoodMessage = (mood) => {
-        if (mood >= 8) return 'You\'re doing amazing!';
-        if (mood >= 6) return 'Keep up the balanced vibes';
-        if (mood >= 4) return 'Small steps forward';
+        if (mood >= 80) return 'You\'re doing amazing!';
+        if (mood >= 60) return 'Keep up the balanced vibes';
+        if (mood >= 40) return 'Small steps forward';
         return 'Remember to be kind to yourself';
     };
 
@@ -221,7 +221,7 @@ const Dashboard = () => {
                                 </div>
                                 <div className="flex items-baseline gap-2 mb-2">
                                     <span className="text-4xl font-black text-yellow-400">{recentMoodAverage}</span>
-                                    <span className="text-gray-500 text-lg">/10</span>
+                                    <span className="text-gray-500 text-lg">/100</span>
                                 </div>
                                 <p className="text-gray-300 text-sm italic">"{getMoodMessage(parseFloat(recentMoodAverage))}"</p>
                             </div>
@@ -249,7 +249,6 @@ const Dashboard = () => {
 
                         <div className="space-y-3">
                             {[
-                                { icon: '⏰', label: 'Set Reminder', path: '/reminders' },
                                 { icon: '🍅', label: 'Pomodoro Timer', path: '/pomodoro-timer' },
                                 { icon: '📊', label: 'View Analytics', path: '/analytics' },
                                 { icon: '⚙️', label: 'Settings', path: '/settings' },

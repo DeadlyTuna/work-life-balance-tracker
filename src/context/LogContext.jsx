@@ -52,10 +52,26 @@ export const LogProvider = ({ children }) => {
     setIsHabitsLoading(true);
 
     // Load all data from localStorage
-    const habits = loadFromStorage(user.id, 'habits');
+    let habits = loadFromStorage(user.id, 'habits');
     const logs = loadFromStorage(user.id, 'logs');
     const completions = loadFromStorage(user.id, 'completions');
     const events = loadFromStorage(user.id, 'events');
+
+    // Add default habits if user has no habits
+    if (habits.length === 0) {
+      const defaultHabits = [
+        { id: generateId(), user_id: user.id, name: '💧 Drink 8 glasses of water', frequency: 'Daily', created_at: new Date().toISOString() },
+        { id: generateId(), user_id: user.id, name: '🚿 Take a shower/bath', frequency: 'Daily', created_at: new Date().toISOString() },
+        { id: generateId(), user_id: user.id, name: '💼 Finish work tasks', frequency: 'Daily', created_at: new Date().toISOString() },
+        { id: generateId(), user_id: user.id, name: '😴 Get 7-8 hours of sleep', frequency: 'Daily', created_at: new Date().toISOString() },
+        { id: generateId(), user_id: user.id, name: '🏃‍♂️ Exercise for 30 minutes', frequency: 'Daily', created_at: new Date().toISOString() },
+        { id: generateId(), user_id: user.id, name: '📚 Read for 20 minutes', frequency: 'Daily', created_at: new Date().toISOString() },
+        { id: generateId(), user_id: user.id, name: '🧘‍♀️ Meditate or relax', frequency: 'Daily', created_at: new Date().toISOString() },
+        { id: generateId(), user_id: user.id, name: '🥗 Eat healthy meals', frequency: 'Daily', created_at: new Date().toISOString() },
+      ];
+      habits = defaultHabits;
+      saveToStorage(user.id, 'habits', defaultHabits);
+    }
 
     setUserHabits(habits);
 
@@ -182,18 +198,20 @@ export const LogProvider = ({ children }) => {
 
     saveToStorage(user.id, 'completions', completions);
 
-    // Optimistic update
+    // Optimistic update - create new objects instead of mutating
     setUserLogs(prev => {
       const arr = [...prev];
       const index = arr.findIndex(l => l.date === date);
       if (index >= 0) {
         const log = arr[index];
         const completed = log.completed_habits || [];
-        if (completed.includes(habitId)) {
-          log.completed_habits = completed.filter(id => id !== habitId);
-        } else {
-          log.completed_habits = [...completed, habitId];
-        }
+        // Create a new log object with updated completed_habits
+        arr[index] = {
+          ...log,
+          completed_habits: completed.includes(habitId)
+            ? completed.filter(id => id !== habitId)
+            : [...completed, habitId]
+        };
       } else {
         arr.push({
           date,

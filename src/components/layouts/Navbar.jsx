@@ -6,7 +6,6 @@ import { useTheme } from '../../context/ThemeContext'; // adjust path if needed
 const navItems = [
   { name: 'Dashboard', path: '/dashboard' },
   { name: 'Habits', path: '/habits' },
-  { name: 'Reminders', path: '/reminders' },
   { name: 'Timetable', path: '/timetable' },
   { name: 'Tools', path: '/tools' },
   { name: 'AI Checkup', path: '/ai-checkup' },

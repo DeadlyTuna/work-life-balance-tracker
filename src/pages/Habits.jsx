@@ -74,7 +74,11 @@ const Habits = () => {
                       <p className="text-sm text-gray-400">{habit.target_frequency}</p>
                     </div>
                     <button
-                      onClick={() => toggleHabit(habit.id, today)}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        toggleHabit(habit.id, today);
+                      }}
                       className={`px-4 py-2 rounded-lg font-bold transition-all ${isCompleted
                         ? 'bg-green-500/20 text-green-400 border border-green-500/50 hover:bg-green-500/30'
                         : 'bg-gray-700 hover:bg-gray-600 text-gray-300 border border-gray-600'
