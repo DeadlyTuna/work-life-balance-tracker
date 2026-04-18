@@ -2,11 +2,12 @@ import React, { useState } from 'react';
 import { useLogContext } from '../context/LogContext';
 
 const Habits = () => {
-  const { userHabits, userLogs, addHabit, toggleHabit } = useLogContext();
+  const { userHabits, userLogs, addHabit, toggleHabit, removeHabit } = useLogContext();
   const [activeTab, setActiveTab] = useState('daily'); // 'daily' or 'manage'
   const [name, setName] = useState('');
   const [frequency, setFrequency] = useState('Daily');
   const [loading, setLoading] = useState(false);
+  const [removingId, setRemovingId] = useState(null);
 
   const today = new Date().toISOString().split('T')[0];
   const todaysLog = userLogs.find(l => l.date === today);
@@ -25,6 +26,18 @@ const Habits = () => {
       console.error('Error adding habit:', err);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleRemoveHabit = async (habitId, habitName) => {
+    if (!window.confirm(`Remove "${habitName}"? This cannot be undone.`)) return;
+    setRemovingId(habitId);
+    try {
+      await removeHabit(habitId);
+    } catch (err) {
+      console.error('Error removing habit:', err);
+    } finally {
+      setRemovingId(null);
     }
   };
 
@@ -128,9 +141,18 @@ const Habits = () => {
             <div className="space-y-2">
               <h3 className="text-lg font-semibold text-gray-300 mb-2">Your Habits</h3>
               {userHabits.map((habit) => (
-                <div key={habit.id} className="flex justify-between p-3 bg-gray-900/50 rounded-lg border border-gray-700">
-                  <span>{habit.name}</span>
-                  <span className="text-xs bg-gray-800 px-2 py-1 rounded text-gray-400">{habit.target_frequency}</span>
+                <div key={habit.id} className="flex justify-between items-center p-3 bg-gray-900/50 rounded-lg border border-gray-700">
+                  <div>
+                    <span className="font-medium text-gray-100">{habit.name}</span>
+                    <span className="ml-3 text-xs bg-gray-800 px-2 py-1 rounded text-gray-400">{habit.target_frequency || habit.frequency}</span>
+                  </div>
+                  <button
+                    onClick={() => handleRemoveHabit(habit.id, habit.name)}
+                    disabled={removingId === habit.id}
+                    className="ml-4 px-3 py-1.5 rounded-lg text-sm font-semibold bg-red-500/10 text-red-400 border border-red-500/30 hover:bg-red-500/25 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {removingId === habit.id ? '...' : '🗑 Remove'}
+                  </button>
                 </div>
               ))}
             </div>

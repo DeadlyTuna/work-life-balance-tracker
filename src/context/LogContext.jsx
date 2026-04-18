@@ -134,6 +134,19 @@ export const LogProvider = ({ children }) => {
     saveToStorage(user.id, 'habits', updatedHabits);
   };
 
+  const removeHabit = async (habitId) => {
+    if (!user?.id) return;
+
+    const updatedHabits = userHabits.filter(h => h.id !== habitId);
+    setUserHabits(updatedHabits);
+    saveToStorage(user.id, 'habits', updatedHabits);
+
+    // Also clean up any completions for this habit
+    const completions = loadFromStorage(user.id, 'completions');
+    const updatedCompletions = completions.filter(c => c.habit_id !== habitId);
+    saveToStorage(user.id, 'completions', updatedCompletions);
+  };
+
   const addLog = async (logData) => {
     if (!user?.id) return;
 
@@ -275,6 +288,7 @@ export const LogProvider = ({ children }) => {
       isLogsLoading,
       isHabitsLoading,
       addHabit,
+      removeHabit,
       addLog,
       addEvent,
       updateEvent,
